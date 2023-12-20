@@ -1,0 +1,258 @@
+<!-- skills.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Skills</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mt-4 mb-4">My Skills</h1>
+
+      <!-- Form to add skills -->
+      <form id="skillsForm">
+        <div class="form-group">
+          <label for="skillName">Skill Name:</label>
+          <select class="form-control" id="skillName" required>
+            <option value="" disabled selected>Select One</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+            <option value="JavaScript">JavaScript</option>
+            <!-- Add more skills as needed -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="subDomain">Sub Domain:</label>
+          <select class="form-control" id="subDomain" required>
+            <option value="" disabled selected>Select One</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Mobile App Development">
+              Mobile App Development
+            </option>
+            <!-- Add more sub-domains as needed -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="areaDomain">Area Domain:</label>
+          <select class="form-control" id="areaDomain" required>
+            <option value="" disabled selected>Select One</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <!-- Add more area domains as needed -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="rating">Rating:</label>
+          <select class="form-control" id="rating" required>
+            <option value="" disabled selected>Select One</option>
+            <option value="Awareness">Awareness</option>
+            <option value="Novice">Novice</option>
+            <option value="Proficiency">Proficiency</option>
+            <option value="Expert">Expert</option>
+          </select>
+        </div>
+
+        <button type="button" class="btn btn-success" onclick="addSkill()">
+          Add Skill
+        </button>
+      </form>
+
+      <!-- Table to display skills -->
+      <h2 class="mt-4">Skills List</h2>
+      <div class="mb-2">
+        <label class="mr-2" for="selectAll">Select All</label>
+        <input type="checkbox" id="selectAll" onchange="selectAllSkills()" />
+      </div>
+      <div class="mb-2">
+        <button
+          type="button"
+          class="btn btn-danger mr-2"
+          onclick="removeSelectedSkills()"
+        >
+          Remove Selected
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="logout()">
+          Logout
+        </button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Skill Name</th>
+            <th>Sub Domain</th>
+            <th>Area Domain</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody id="skillsTableBody"></tbody>
+      </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      // Load skills from localStorage
+      var addedSkills = new Map(
+        JSON.parse(localStorage.getItem("addedSkills")) || []
+      );
+
+      var searchParams = new URLSearchParams(window.location.search);
+      var username = searchParams.get("user") || "user";
+
+      function addSkill() {
+        // Get input values
+        var skillName = document.getElementById("skillName").value;
+        var subDomain = document.getElementById("subDomain").value;
+        var areaDomain = document.getElementById("areaDomain").value;
+        var rating = document.getElementById("rating").value;
+
+        // Validate inputs
+        if (
+          !skillName ||
+          skillName === "Select One" ||
+          !subDomain ||
+          subDomain === "Select One" ||
+          !areaDomain ||
+          areaDomain === "Select One" ||
+          !rating ||
+          rating === "Select One"
+        ) {
+          alert("Please select one option for each field");
+          return;
+        }
+
+        // Check if the skill is already added
+        var skillKey = skillName;
+        if (addedSkills.has(skillKey)) {
+          alert("This skill is already added");
+          return;
+        }
+
+        // Add skill to the map to prevent duplicates
+        addedSkills.set(skillKey, { skillName, subDomain, areaDomain, rating });
+
+        // Save skills to localStorage
+        saveSkillsToLocalStorage();
+
+        // Refresh the skills table
+        displaySkills();
+
+        // Clear the form inputs
+        document.getElementById("skillsForm").reset();
+      }
+
+      function displaySkills() {
+        // Display skills in the table
+        var tableBody = document.getElementById("skillsTableBody");
+        tableBody.innerHTML = "";
+
+        if (addedSkills.size === 0) {
+          var noSkillsRow = tableBody.insertRow(0);
+          var noSkillsCell = noSkillsRow.insertCell(0);
+          noSkillsCell.colSpan = 5;
+          noSkillsCell.innerHTML = "No skills added yet.";
+        } else {
+          addedSkills.forEach(function (skill, key) {
+            var newRow = tableBody.insertRow(tableBody.rows.length);
+
+            // Add a checkbox
+            var checkboxCell = newRow.insertCell(0);
+            var checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = key;
+            checkboxCell.appendChild(checkbox);
+
+            // Insert cells with the input values
+            newRow.insertCell(1).innerHTML = skill.skillName;
+            newRow.insertCell(2).innerHTML = skill.subDomain;
+            newRow.insertCell(3).innerHTML = skill.areaDomain;
+            newRow.insertCell(4).innerHTML = skill.rating;
+          });
+        }
+      }
+
+      function removeSelectedSkills() {
+        // Get all selected checkboxes
+        var checkboxes = document.querySelectorAll(
+          'input[type="checkbox"]:checked'
+        );
+
+        // Remove skills based on selected checkboxes
+        checkboxes.forEach(function (checkbox) {
+          var skillKey = checkbox.value;
+          addedSkills.delete(skillKey);
+        });
+
+        // Save skills to localStorage
+        saveSkillsToLocalStorage();
+
+        // Refresh the skills table
+        displaySkills();
+      }
+
+      function selectAllSkills() {
+        var selectAllCheckbox = document.getElementById("selectAll");
+        var individualCheckboxes = document.querySelectorAll(
+          'input[type="checkbox"]'
+        );
+
+        // Set the state of individual checkboxes based on the state of the "Select All" checkbox
+        individualCheckboxes.forEach(function (checkbox) {
+          checkbox.checked = selectAllCheckbox.checked;
+        });
+      }
+
+      function saveSkillsToLocalStorage() {
+        // Convert Map to array and save to localStorage
+        localStorage.setItem(
+          "addedSkills",
+          JSON.stringify(Array.from(addedSkills.entries()))
+        );
+      }
+
+      function logout() {
+        // Redirect to the login page (index1.html)
+        window.location.href = "login.html";
+      }
+
+      // Initial display of skills
+      displaySkills();
+    </script>
+  </body>
+</html>
