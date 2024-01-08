@@ -121,29 +121,54 @@
     <p class="switch-btn" onclick="toggleForm()">User Login</p>
   </div>
 
-  <script>
-    function toggleForm() {
-      const userForm = document.getElementById("loginForm");
-      const adminForm = document.getElementById("adminForm");
+  <!-- ... Your HTML code ... -->
 
-      userForm.classList.toggle("animated");
-      adminForm.classList.toggle("animated");
+<script>
+  function toggleForm() {
+    const userForm = document.getElementById("loginForm");
+    const adminForm = document.getElementById("adminForm");
 
-      setTimeout(() => {
-        userForm.style.display = userForm.style.display === "none" ? "block" : "none";
-        adminForm.style.display = adminForm.style.display === "none" ? "block" : "none";
-      }, 400);
-    }
+    userForm.classList.toggle("animated");
+    adminForm.classList.toggle("animated");
 
-    function login() {
+    setTimeout(() => {
+      userForm.style.display = userForm.style.display === "none" ? "block" : "none";
+      adminForm.style.display = adminForm.style.display === "none" ? "block" : "none";
+    }, 400);
+  }
+
+  function login() {
+    const usernameInput = document.querySelector('#loginForm input[type="text"]');
+    const passwordInput = document.querySelector('#loginForm input[type="password"]');
+
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+
+    if (username === "user" && password === "pass") {
       window.location.href = 'index.html';
-      //alert("User login logic goes here!");
+      // You can add additional logic or alerts if needed
+    } else {
+      alert("Invalid credentials. Please try again.");
     }
+  }
 
-    function adminLogin() {
+  function adminLogin() {
+    const adminUsernameInput = document.querySelector('#adminForm input[type="text"]');
+    const adminPasswordInput = document.querySelector('#adminForm input[type="password"]');
+
+    const adminUsername = adminUsernameInput.value;
+    const adminPassword = adminPasswordInput.value;
+
+    if (adminUsername === "admin" && adminPassword === "admin") {
       window.location.href = 'admin.html';
-      //alert("Admin login logic goes here!");
+      // You can add additional logic or alerts if needed
+    } else {
+      alert("Invalid admin credentials. Please try again.");
     }
-  </script>
+  }
+</script>
+
+<!-- ... Your HTML code ... -->
+
 </body>
 </html>

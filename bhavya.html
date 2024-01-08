@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Your existing head content here -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -101,7 +103,44 @@
 }
     </script>
 </head>
+    <script>
+        function validate(val) {
+            // Existing validation logic remains unchanged
+        }
+
+        function saveSkill() {
+            if (validate(0)) {
+                // Get the selected values
+                var selectedSkill = document.getElementById("Skill").value;
+                var selectedRating = document.getElementById("Rating").value;
+                var selectedDomain = document.getElementById("domain").value;
+                var selectedSubDomain = document.getElementById("sub").value;
+
+                // Create an object to store the skill information
+                var skillInfo = {
+                    skill: selectedSkill,
+                    rating: selectedRating,
+                    domain: selectedDomain,
+                    subDomain: selectedSubDomain
+                };
+
+                // Retrieve existing skills from local storage or create an empty array
+                var existingSkills = JSON.parse(localStorage.getItem("skills")) || [];
+
+                // Add the new skill to the array
+                existingSkills.push(skillInfo);
+
+                // Save the updated skills array back to local storage
+                localStorage.setItem("skills", JSON.stringify(existingSkills));
+
+                // Redirect to the admin.html page
+                window.location.href = 'admin.html';
+            }
+        }
+    </script>
+</head>
 <body>
+    <!-- Your existing body content here -->
     <div class="container-fluid px-1 py-5 mx-auto">
         <div class="row d-flex justify-content-center">
             <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
@@ -155,7 +194,8 @@
                         
                         <div class="row justify-content-center">
                             <div class="form-group col-sm-6 d-flex justify-content-center">
-                                <button type="submit" class="btn-block btn-primary">Save</button>
+                                <!-- Call saveSkill() on button click -->
+                                <button type="button" class="btn-block btn-primary" onclick="saveSkill()">Save</button>
                             </div>
                         </div>
                         
@@ -165,6 +205,8 @@
             </div>
         </div>
     </div>
+    
+
     
 </body>
 </html>

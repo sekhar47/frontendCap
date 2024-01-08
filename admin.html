@@ -1,0 +1,126 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Add your head content here -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4">Admin Dashboard</h1>
+
+        <!-- Neatly designed search bar -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" oninput="searchTable(this.value)" />
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table to display user skills -->
+        <h2 class="mt-4">User Skills</h2>
+        <div class="table-container">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>User</th>
+                        <th>Skill Name</th>
+                        <th>Sub Domain</th>
+                        <th>Area Domain</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody id="userSkillsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function displayUserSkills() {
+            // Load user skills from localStorage
+            var userSkills = JSON.parse(localStorage.getItem("skills")) || [];
+
+            // Display user skills in the table
+            var tableBody = document.getElementById("userSkillsTableBody");
+            tableBody.innerHTML = "";
+
+            if (userSkills.length === 0) {
+                var noSkillsRow = tableBody.insertRow(0);
+                var noSkillsCell = noSkillsRow.insertCell(0);
+                noSkillsCell.colSpan = 5;
+                noSkillsCell.innerHTML = "No user skills added yet.";
+            } else {
+                userSkills.forEach(function (skill) {
+                    var newRow = tableBody.insertRow(tableBody.rows.length);
+
+                    var user = "User"; // You may replace this with the actual user data
+
+                    // Insert cells with the skill information
+                    newRow.insertCell(0).innerHTML = user;
+                    newRow.insertCell(1).innerHTML = skill.skill;
+                    newRow.insertCell(2).innerHTML = skill.subDomain;
+                    newRow.insertCell(3).innerHTML = skill.domain;
+                    newRow.insertCell(4).innerHTML = skill.rating;
+                });
+            }
+        }
+
+        // Initial display of user skills
+        displayUserSkills();
+
+        // Function to search across all columns
+        function searchTable(searchValue) {
+            var table, tr, td, i, txtValue;
+            table = document.getElementById("userSkillsTableBody");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                var found = false;
+                // Loop through all columns (excluding the first one - User)
+                for (var j = 1; j < tr[i].cells.length; j++) {
+                    td = tr[i].getElementsByTagName("td")[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toLowerCase().indexOf(searchValue.toLowerCase()) > -1) {
+                            found = true;
+                            break; // Break the inner loop if found in any column
+                        }
+                    }
+                }
+                // Display or hide the row based on the search result
+                if (found) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
