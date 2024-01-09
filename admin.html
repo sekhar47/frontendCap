@@ -31,10 +31,15 @@
                     <input type="text" class="form-control" placeholder="Search" oninput="searchTable(this.value)" />
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button">
+                            <img src="https://th.bing.com/th/id/OIP.PG9LHoSNGjvle4sOnmwD-AHaHa?w=216&h=217&c=7&r=0&o=5&pid=1.7" alt="search" width="23">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
+            </div>
+            <!-- Add Logout Button -->
+            <div class="col-md-6 text-right">
+                <button id="logoutButton" class="btn btn-danger" onclick="logout()">Logout</button>
             </div>
         </div>
 
@@ -119,6 +124,12 @@
                     tr[i].style.display = "none";
                 }
             }
+        }
+
+        // Logout function
+        function logout() {
+            // Update the window location to the login page
+            window.location.href = "login.html";
         }
     </script>
 </body>

@@ -3,172 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-  
-
-
+  <link rel="stylesheet" href="login.css">
   <title>Login Page with Video Background</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    #video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      width: 300px;
-      padding: 20px;
-      background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      box-sizing: border-box;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #028102;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: rgb(208, 224, 61) 83, 41);
-    }
-
-    .switch-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 12px;
-      color: #888;
-      text-decoration: bold;
-      text-decoration: underline;
-      cursor: pointer;
-	
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    .animated {
-      animation: fadeIn 0.8s ease-in-out;
-    }
-  </style>
 </head>
 <body>
+
+  <div class="header">
+    <!-- Your existing content here --> 
+    <!-- Other elements in the body won't be affected -->
+     <h1 >Elevate Your Talent, Amplify Your Success.</h1 align-top>
+</div>
+ 
   <!-- Video Background -->
   <video id="video-background" autoplay muted loop>
     <source src="https://assetsthis.s3.amazonaws.com/homebanner/video1.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
+  <div class="gif">
+    <img id="logoGif" src="talentrackgif.gif" alt="logo" width="140">
+  </div>
+
+  
+  
+  
+
   <!-- Login Form Container -->
   <div class="container animated" id="loginForm">
+    
     <img src="https://www.torryharris.com/modules/mod_automatoninsights/img/this25yersop2.gif" alt="manasa" width="150">
-    <h2>User Login</h2>
-    <input type="text" placeholder="Username">
+
+    <h2>Employee Login</h2>
+    <input type="text" placeholder="Employee ID">
     <input type="password" placeholder="Password">
     <button onclick="login()">Login</button>
-    <p class="switch-btn" onclick="toggleForm()">Admin Login</p>
+    <!-- <p class="switch-btn" onclick="toggleForm()">Admin Login</p> -->
   </div>
 
   <!-- Admin Login Form Container -->
-  <div class="container animated" id="adminForm" style="display: none;">
+  <!-- <div class="container animated" id="adminForm" style="display: none;">
     <img src="https://www.torryharris.com/modules/mod_automatoninsights/img/this25yersop2.gif" alt="" width="150">
     <h2>Admin Login</h2>
     <input type="text" placeholder="Admin Username">
     <input type="password" placeholder="Admin Password">
     <button onclick="adminLogin()">Login</button>
     <p class="switch-btn" onclick="toggleForm()">User Login</p>
-  </div>
+  </div> -->
 
-  <!-- ... Your HTML code ... -->
-
-<script>
-  function toggleForm() {
-    const userForm = document.getElementById("loginForm");
-    const adminForm = document.getElementById("adminForm");
-
-    userForm.classList.toggle("animated");
-    adminForm.classList.toggle("animated");
-
-    setTimeout(() => {
-      userForm.style.display = userForm.style.display === "none" ? "block" : "none";
-      adminForm.style.display = adminForm.style.display === "none" ? "block" : "none";
-    }, 400);
-  }
-
-  function login() {
-    const usernameInput = document.querySelector('#loginForm input[type="text"]');
-    const passwordInput = document.querySelector('#loginForm input[type="password"]');
-
-    const username = usernameInput.value;
-    const password = passwordInput.value;
-
-    if (username === "user" && password === "pass") {
-      window.location.href = 'index.html';
-      // You can add additional logic or alerts if needed
-    } else {
-      alert("Invalid credentials. Please try again.");
-    }
-  }
-
-  function adminLogin() {
-    const adminUsernameInput = document.querySelector('#adminForm input[type="text"]');
-    const adminPasswordInput = document.querySelector('#adminForm input[type="password"]');
-
-    const adminUsername = adminUsernameInput.value;
-    const adminPassword = adminPasswordInput.value;
-
-    if (adminUsername === "admin" && adminPassword === "admin") {
-      window.location.href = 'admin.html';
-      // You can add additional logic or alerts if needed
-    } else {
-      alert("Invalid admin credentials. Please try again.");
-    }
-  }
-</script>
-
-<!-- ... Your HTML code ... -->
+  <script src="login.js"></script>
 
 </body>
 </html>
