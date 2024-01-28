@@ -1,0 +1,273 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Add your head content here -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="MicrosoftTeams-image (1).png" type="image/x-icon">
+    <title>TalenTrack | Admin</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .table-container {
+        margin-top: 20px;
+      }
+
+      .logout-button-container {
+        /* border: hsl(119, 85%, 48%); */
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+      }
+
+      #logoutButton {
+        background-color: #15da39;
+        color: #fff;
+      }
+
+      .container {
+        /* border: 3px solid black; */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mt-4 mb-4">Manage Skills</h1>
+
+      <!-- Neatly designed search bar -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search"
+              oninput="searchTable(this.value)"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button">
+                <img src="https://th.bing.com/th/id/OIP.PG9LHoSNGjvle4sOnmwD-AHaHa?w=216&h=217&c=7&r=0&o=5&pid=1.7" alt="search" width="23">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logout Button Container -->
+      <div class="col-md-6 text-right logout-button-container">
+        <button class="btn btn-danger mb-2 mr-2" onclick="removeSelected()">Delete</button>
+        <button id="logoutButton" class="btn btn-danger" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Table to display user skills -->
+    <h2 class="mt-4">User Skills</h2>
+    <div class="table-container">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>Select</th>
+            <th>Skill Name</th>
+            <th>Sub Domain</th>
+            <th>Area Domain</th>
+            <th>Rating</th>
+            <th>Update</th>
+          </tr>
+        </thead>
+        <tbody id="userSkillsTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Update Skill Modal -->
+    <div class="modal" id="updateSkillModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Skill</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="updateSkillForm">
+              <div class="form-group">
+                <label for="updatedSubDomain">Sub Domain:</label>
+                <select class="form-control" id="updatedSubDomain" required>
+                  <!-- Add options for sub-domain dropdown -->
+                  <option value="" disabled selected>Select One</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Mobile App Development">Mobile App Development</option>
+                  <!-- Add more options as needed -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="updatedAreaDomain">Area Domain:</label>
+                <select class="form-control" id="updatedAreaDomain" required>
+                  <!-- Add options for area-domain dropdown -->
+                  <option value="" disabled selected>Select One</option>
+                  <option value="Frontend">Frontend</option>
+                  <option value="Backend">Backend</option>
+                  <option value="Machine Learning">Machine Learning</option>
+                  <!-- Add more options as needed -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="updatedRating">Rating:</label>
+                <select class="form-control" id="updatedRating" required>
+                    <option value="" disabled selected>Select One</option>
+                    <option value="Awareness">Awareness</option>
+                    <option value="Novice">Novice</option>
+                    <option value="Proficiency">Proficiency</option>
+                    <option value="Expert">Expert</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="saveUpdatedSkill()">Save Changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      var userSkills = new Map(JSON.parse(localStorage.getItem("addedSkills")) || []);
+      var currentRowIndex; // To store the index of the row being updated
+
+      function displayUserSkills() {
+        var tableBody = document.getElementById("userSkillsTableBody");
+        tableBody.innerHTML = "";
+
+        if (userSkills.size === 0) {
+          var noSkillsRow = tableBody.insertRow(0);
+          var noSkillsCell = noSkillsRow.insertCell(0);
+          noSkillsCell.colSpan = 6;
+          noSkillsCell.innerHTML = "No user skills added yet.";
+        } else {
+          userSkills.forEach(function (skill, index) {
+            var newRow = tableBody.insertRow(tableBody.rows.length);
+
+            var checkboxCell = newRow.insertCell(0);
+            var checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = "selectSkill";
+            checkbox.value = index;
+            checkboxCell.appendChild(checkbox);
+
+            newRow.insertCell(1).innerHTML = skill.skillName;
+            newRow.insertCell(2).innerHTML = skill.subDomain;
+            newRow.insertCell(3).innerHTML = skill.areaDomain;
+            newRow.insertCell(4).innerHTML = skill.rating;
+
+            // Add "Update" button to each row
+            var updateCell = newRow.insertCell(5);
+            var updateButton = document.createElement("button");
+            updateButton.className = "btn btn-primary btn-sm";
+            updateButton.textContent = "Update";
+            updateButton.onclick = function () {
+              openUpdateModal(index);
+            };
+            updateCell.appendChild(updateButton);
+          });
+        }
+      }
+
+      displayUserSkills();
+
+      function searchTable(searchValue) {
+        var table, tr, td, i, txtValue;
+        table = document.getElementById("userSkillsTableBody");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+          var found = false;
+          // Loop through all columns (excluding the first one - Select)
+          for (var j = 1; j < tr[i].cells.length - 1; j++) {
+            td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toLowerCase().indexOf(searchValue.toLowerCase()) > -1) {
+                found = true;
+                break; // Break the inner loop if found in any column
+              }
+            }
+          }
+          // Display or hide the row based on the search result
+          if (found) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+
+      function removeSelected() {
+        var table = document.getElementById("userSkillsTableBody");
+        var checkboxes = table.querySelectorAll('input[name="selectSkill"]:checked');
+
+        checkboxes.forEach(function (checkbox) {
+          var rowIndex = checkbox.value;
+          userSkills.delete(rowIndex);
+        });
+
+        localStorage.setItem("addedSkills", JSON.stringify(Array.from(userSkills)));
+        displayUserSkills();
+      }
+
+      function openUpdateModal(rowIndex) {
+        var skill = userSkills.get(rowIndex);
+
+        // Populate the modal with existing skill details
+        document.getElementById("updatedSubDomain").value = skill.subDomain;
+        document.getElementById("updatedAreaDomain").value = skill.areaDomain;
+        document.getElementById("updatedRating").value = skill.rating;
+
+        // Show the modal
+        $('#updateSkillModal').modal('show');
+
+        // Save the rowIndex in a hidden field or variable for later use
+        currentRowIndex = rowIndex;
+      }
+
+      function saveUpdatedSkill() {
+        var updatedSubDomain = document.getElementById("updatedSubDomain").value;
+        var updatedAreaDomain = document.getElementById("updatedAreaDomain").value;
+        var updatedRating = document.getElementById("updatedRating").value;
+
+        // Update the skill in the userSkills map
+        var skillToUpdate = userSkills.get(currentRowIndex);
+        skillToUpdate.subDomain = updatedSubDomain;
+        skillToUpdate.areaDomain = updatedAreaDomain;
+        skillToUpdate.rating = updatedRating;
+
+        // Save the updated userSkills map to localStorage
+        localStorage.setItem("addedSkills", JSON.stringify(Array.from(userSkills)));
+        alert("Skills updated successfully.");
+
+        // Display the updated skills in the table
+        displayUserSkills();
+
+        // Close the modal
+        $('#updateSkillModal').modal('hide');
+      }
+
+      function logout() {
+        window.location.href = "login.html";
+      } 
+    </script>
+  </body>
+</html>

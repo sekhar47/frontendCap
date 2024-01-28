@@ -2,10 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Add your head content here -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="MicrosoftTeams-image (1).png" type="image/x-icon">
-  <title>TalenTrack | Skills</title>
+    <title>TalenTrack | Skills</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -14,24 +15,13 @@
       body {
         font-family: Arial, sans-serif;
         margin: 20px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
+        background-color: rgb(160, 215, 210);
       }
       .form-group {
         margin-bottom: 15px;
+        display: inline-flexbox;
       }
+    
     </style>
   </head>
   <body>
@@ -90,37 +80,15 @@
           Add Skill
         </button>
       </form>
-
-      <!-- Table to display skills -->
-      <h2 class="mt-4">Skills List</h2>
+      
       <div class="mb-2">
-        <label class="mr-2" for="selectAll">Select All</label>
-        <input type="checkbox" id="selectAll" onchange="selectAllSkills()" />
-      </div>
-      <div class="mb-2">
-        <button
-          type="button"
-          class="btn btn-danger mr-2"
-          onclick="removeSelectedSkills()"
-        >
-          Remove Selected
+        <button type="button" class="btn btn-primary" onclick="manageSkills()">
+          Manage Skills
         </button>
         <button type="button" class="btn btn-secondary" onclick="logout()">
           Logout
         </button>
       </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Skill Name</th>
-            <th>Sub Domain</th>
-            <th>Area Domain</th>
-            <th>Rating</th>
-          </tr>
-        </thead>
-        <tbody id="skillsTableBody"></tbody>
-      </table>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -132,9 +100,6 @@
       var addedSkills = new Map(
         JSON.parse(localStorage.getItem("addedSkills")) || []
       );
-
-      var searchParams = new URLSearchParams(window.location.search);
-      var username = searchParams.get("user") || "user";
 
       function addSkill() {
         // Get input values
@@ -158,8 +123,10 @@
           return;
         }
 
-        // Check if the skill is already added
+        // Generate a unique skill key based on the selected options
         var skillKey = skillName;
+
+        // Check if the skill is already added
         if (addedSkills.has(skillKey)) {
           alert("This skill is already added");
           return;
@@ -167,76 +134,13 @@
 
         // Add skill to the map to prevent duplicates
         addedSkills.set(skillKey, { skillName, subDomain, areaDomain, rating });
+        alert("Skills Added successfully.");
 
         // Save skills to localStorage
         saveSkillsToLocalStorage();
-
-        // Refresh the skills table
-        displaySkills();
 
         // Clear the form inputs
         document.getElementById("skillsForm").reset();
-      }
-
-      function displaySkills() {
-        // Display skills in the table
-        var tableBody = document.getElementById("skillsTableBody");
-        tableBody.innerHTML = "";
-
-        if (addedSkills.size === 0) {
-          var noSkillsRow = tableBody.insertRow(0);
-          var noSkillsCell = noSkillsRow.insertCell(0);
-          noSkillsCell.colSpan = 5;
-          noSkillsCell.innerHTML = "No skills added yet.";
-        } else {
-          addedSkills.forEach(function (skill, key) {
-            var newRow = tableBody.insertRow(tableBody.rows.length);
-
-            // Add a checkbox
-            var checkboxCell = newRow.insertCell(0);
-            var checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.value = key;
-            checkboxCell.appendChild(checkbox);
-
-            // Insert cells with the input values
-            newRow.insertCell(1).innerHTML = skill.skillName;
-            newRow.insertCell(2).innerHTML = skill.subDomain;
-            newRow.insertCell(3).innerHTML = skill.areaDomain;
-            newRow.insertCell(4).innerHTML = skill.rating;
-          });
-        }
-      }
-
-      function removeSelectedSkills() {
-        // Get all selected checkboxes
-        var checkboxes = document.querySelectorAll(
-          'input[type="checkbox"]:checked'
-        );
-
-        // Remove skills based on selected checkboxes
-        checkboxes.forEach(function (checkbox) {
-          var skillKey = checkbox.value;
-          addedSkills.delete(skillKey);
-        });
-
-        // Save skills to localStorage
-        saveSkillsToLocalStorage();
-
-        // Refresh the skills table
-        displaySkills();
-      }
-
-      function selectAllSkills() {
-        var selectAllCheckbox = document.getElementById("selectAll");
-        var individualCheckboxes = document.querySelectorAll(
-          'input[type="checkbox"]'
-        );
-
-        // Set the state of individual checkboxes based on the state of the "Select All" checkbox
-        individualCheckboxes.forEach(function (checkbox) {
-          checkbox.checked = selectAllCheckbox.checked;
-        });
       }
 
       function saveSkillsToLocalStorage() {
@@ -247,13 +151,15 @@
         );
       }
 
+      function manageSkills() {
+        // Redirect to the manageSkills.html page
+        window.location.href = "managingskills.html";
+      }
+
       function logout() {
         // Redirect to the login page (index1.html)
         window.location.href = "login.html";
       }
-
-      // Initial display of skills
-      displaySkills();
     </script>
   </body>
 </html>
